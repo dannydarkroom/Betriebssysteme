@@ -1,0 +1,17 @@
+Mit gdb
+-----------------------------
+t 0x7fffffffd9d0 (stack) is 42
+Value at 0x602010 (heap) is 1337
+----------------------------
+
+ohne gdb
+------------------------------
+Value at 0x7ffcdcc831b0 (stack) is 42
+Value at 0x23ab010 (heap) is 1337
+
+Value at 0x7ffcbaa51290 (stack) is 42
+Value at 0x2498010 (heap) is 1337
+
+Value at 0x7ffda09a99c0 (stack) is 42
+Value at 0xb9e010 (heap) is 1337
+-------------------------------

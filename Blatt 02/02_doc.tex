@@ -1,0 +1,134 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%             template.tex                                                              %
+%                                                                                       %
+%            Author: Sergej Lewin 10/2008                                               %
+%                                                                                       %    
+% !!!Man braucht noch die Datei Ueb.sty (im gleichen Ordner wie die Hauptdatei)!!!      %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[a4paper,11pt]{article}             % bestimmt das Aussehen eines Dokuments
+\usepackage{Ueb}                                  % vordefinierte Makros
+
+%!!!!anpassen an das Betriebssystem!!!, um Umlaute zu verwenden
+\usepackage[utf8]{inputenc}                      %Linux
+%\usepackage[latin1]{inputenc}                    %Windows
+%\usepackage[applemac]{inputenc}                  %Mac
+
+%individuelle Pakete
+\usepackage{alltt}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{color}
+\usepackage[svgnames]{xcolor} 
+
+
+%Namen und Matrikelnummern anpassen
+%\zweinamen{Name1}{Matrikelnummer1}{Name2}{Matrikelnummer2} %2er Gruppen
+\dreinamen{Steen Sziegaud}{384705}{Tim Altenburg}{420632}{Stephan Thiemicke}{375485} %3er Gruppe
+
+%Briefkastennummer anpassen. z. B. \briefkasten{104}
+\briefkasten{}
+
+%Termin der Uebungsgruppe und Raum anpassen z. B. \termin{Mo. 12-14 , SR2}
+\termin{Mi. 16-18Uhr, N1}
+
+%Blattnummer anpassen z. B. \blatt{5}
+\blatt{2}
+
+\begin{document}
+%Hier kommt der Text des Dokuments......
+\Aufgabe{3}
+
+Wir haben die Beobachtung gemacht, dass die Adressen sich bei mehrmaligem ausf"uhren im gdb
+nicht "andern, wohingegen diese sich jeweils zwischen zwei Ausf"uhrungen in der
+prompt "andern. Dies trifft bei uns sowohl auf den Heap als auch auf den Stack
+zu. 
+Wir erhielten folgende Ausgaben:
+\begin{lstlisting}
+# mit gdb:
+Value at 0x7fffffffd9d0 (stack) is 42
+Value at 0x602010 (heap) is 1337
+
+# ohne gdb:
+# 1.
+Value at 0x7fff6766d300 (stack) is 42
+Value at 0x206e010 (heap) is 1337
+
+# 2.
+Value at 0x7fff91b51f00 (stack) is 42
+Value at 0x928010 (heap) is 1337
+
+# 3.
+Value at 0x7fff96800ec0 (stack) is 42
+Value at 0xa1f010 (heap) is 1337
+\end{lstlisting}
+
+Damit verhalten sich sowohl Stack als auch (obwohl durch die Fragestellung
+anders suggeriert) Heap bei Ausf"uhrung mit bzw. ohne gdb anders.
+
+Da wir die Details der Implementierung weder von C noch vom gdb kennen, k"onnen
+wir nur Vermutungen anstellen, warum dieses Verhalten eintrifft.
+
+Wir vermuten, dass der Prozess, wenn er mit gdb gestartet wird, als Unterprozess
+gestartet wird. Dabei k"onnte gdb so vorgehen, dass es in seinem eigenen
+Adressraum einen Teil f"ur den gestarteten Prozess als Adressraum zur Verf"ugung stellt. Der
+gestartete Prozess arbeitet also auf einem Teilbereich des Adressraumes vom gdb
+Prozess. Damit h"angen die Adressen des gestarteten Prozesses relativ vom
+Adressraum des gdb Prozesses ab. Der gdb scheint relativ zu seinem Adressbereich
+den Prozess immer im selben Bereich zu starten, daher erh"alt man in der selben
+gdb Session (aber nicht zwischen zwei gdb Sessions) die selben Adressen. 
+
+Dies erkl"art aber noch nicht das Verhalten der dynamischen Speicherverwaltung
+im Heap. 
+Wir vermuten, dass sich die Adressen in einer gdb Session auch im Heap nicht
+"andern, weil die gr"o\ss e des zu allozierenden Speichers nicht gro\ss genug
+ist. Da wir nur Speicherplatz f"ur einen int ben"otigen, kann dieser vermutlich
+im eigenen Speicherbereich freigegeben werden. Dieser Speicherbereich ist immer
+wieder bei einem Neustart verf"ugbar und wird daher zur ersten Allozierung
+genutzt, was dazu f"uhrt, dass wir die selben Adressen erhalten. 
+W"urden wir einen gr"o\ss eren Speicherplatz ben"otigen, so dass bspw. der
+eigene Speicherbereich nicht mehr aussreicht, so m"usste eine Anfrage an das
+Betriebssystem geschickt werden, die Speicherplatz f"ur den Prozess zur
+Verf"ugung stellt. Dies w"urde in der Regel zu unterschiedlichen Adressen
+f"uhren. 
+
+Das Verhalten beim Starten ohne gdb, l"asst sich einfach damit erkl"aren, dass
+bei jedem Ausf"uhren ein neuer Prozess mit eigenem Adressraum gestartet wird.
+Das Betriebssystem ist daf"ur zust"andig diesen Adressraum zu bestimmen und f"ur
+diesen Prozess freizugeben. 
+
+
+Zwei gleichzeitig ge"offnete Terminal-Fenster:
+
+Wir erhalten beim Starten des zweiten Prozesses einen Segmentation
+fault. Dies l"asst sich damit erkl"aren, dass die beiden Prozesse nicht auf den
+Speicherbereich des jeweils anderen zugreifen d"urfen. Das ist auch das zu erwartende
+Verhalten. 
+
+
+\Aufgabe{4}
+
+\begin{tabular}{lccccccccccccccccc}
+    & 30 & 31 & 32 & 33 & 11 & 12 & 13 & 21 & 22 & 14 & 34 & 41 & 42 & 23 & 35 & 36 &
+    43 \\
+    $P_1$: & N & R & R & A & A & A & B & R & A & N & N & N & N & N & N & N & N \\
+    $P_2$: & N & N & N & N & R & R & A & A & B & B & B & R & A & N & N & N & N \\
+    $P_3$: & A & A & A & B & B & B & B & R & R & A & B & R & R & A & A & N & N \\
+    $P_4$: & N & N & R & R & R & R & R & R & R & R & A & A & B & B & R & A & N \\
+\end{tabular}
+    
+
+\Aufgabe{5}
+
+\begin{enumerate}[label=(\alph*)]
+    \item $A < B$
+    \item die beiden Prozessabschnitte werden nicht ausgef"uhrt, da sie jeweils
+        darauf warten, dass $s1$ bzw. $s2$ gesetzt wird. Je nach Definition
+        k"onnte man $A < B \wedge B < A$ schreiben.
+    \item $A < B \vee B < A$
+    \item $A \leq B \vee B \leq A$
+    \item $(A < C \wedge A < B \wedge (C \leq B \vee B \leq C)) \vee (B < C
+        \wedge B < A \wedge (C \leq A \vee A \leq C))$
+    \item $A \leq B \vee B \leq A$
+\end{enumerate}
+
+\end{document}

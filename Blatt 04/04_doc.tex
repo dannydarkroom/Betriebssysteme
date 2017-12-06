@@ -1,0 +1,203 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%             template.tex                                                              %
+%                                                                                       %
+%            Author: Sergej Lewin 10/2008                                               %
+%                                                                                       %    
+% !!!Man braucht noch die Datei Ueb.sty (im gleichen Ordner wie die Hauptdatei)!!!      %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[a4paper,11pt]{article}             % bestimmt das Aussehen eines Dokuments
+\usepackage{Ueb}                                  % vordefinierte Makros
+
+%!!!!anpassen an das Betriebssystem!!!, um Umlaute zu verwenden
+\usepackage[utf8]{inputenc}                      %Linux
+%\usepackage[latin1]{inputenc}                    %Windows
+%\usepackage[applemac]{inputenc}                  %Mac
+
+%individuelle Pakete
+\usepackage{alltt}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{color}
+\usepackage[svgnames]{xcolor} 
+\usepackage{pgfgantt}
+
+
+%Namen und Matrikelnummern anpassen
+%\zweinamen{Name1}{Matrikelnummer1}{Name2}{Matrikelnummer2} %2er Gruppen
+\dreinamen{Steen Sziegaud}{384705}{Tim Altenburg}{420632}{Stephan Thiemicke}{375485} %3er Gruppe
+
+%Briefkastennummer anpassen. z. B. \briefkasten{104}
+\briefkasten{}
+
+%Termin der Uebungsgruppe und Raum anpassen z. B. \termin{Mo. 12-14 , SR2}
+\termin{Mi. 16-18Uhr, N1}
+
+%Blattnummer anpassen z. B. \blatt{5}
+\blatt{2}
+
+\begin{document}
+
+%\begin{ganttchart}[vgrid={draw=none,draw=none},%
+    %today=15,%
+    %today offset=.5,%
+    %today label=Heute,%
+    %progress=today,%
+%    x unit=0.3cm,
+%            y unit title=0.7cm,
+%            y unit chart=0.8cm,
+%            bar incomplete/.append style={fill=red},%
+%            progress label text=  {\quad\pgfmathprintnumber[precision=0,verbatim]{#1}\%},
+%            milestone label font=\tiny,
+%            group label font=\tiny,
+%            title label font=\tiny,
+%            bar label node/.style={text width=3cm,align=right,font=\scriptsize\RaggedLeft,anchor=east},
+%            milestone label node/.style={text width=2cm,align=right,font=\scriptsize\RaggedLeft,anchor=east},
+%            group label node/.style={text width=3cm,align=right,font=\scriptsize\RaggedLeft,anchor=east}
+%            ]{0}{46}
+%    \gantttitle{LCFS-PR}{0}{46}
+%    \gantttitlelist{0,...,230}{1}\\
+%    \ganttbar{Prozess 1}{0}{5} \\
+%\end{ganttchart}
+
+\begin{ganttchart}[vgrid,
+    x unit=0.14cm]{1}{120}
+    \gantttitle[title/.style={draw=none, fill=none},
+    include title in canvas=false
+    ]{LCFS-PR}{115} \\
+    \gantttitlelist{5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120}{5}\\
+    \ganttbar{$P_1$}{1}{25} 
+    \ganttbar{}{106}{120}
+    \\
+    \ganttbar{$P_2$}{26}{30} 
+    \\
+    \ganttbar{$P_3$}{31}{50}
+    \\
+    \ganttbar{$P_4$}{51}{55}
+    \\
+    \ganttbar{$P_5$}{56}{105}
+\end{ganttchart}
+\begin{ganttchart}[vgrid,
+    x unit=0.14cm]{1}{120}
+    \gantttitle[title/.style={draw=none, fill=none},
+    include title in canvas=false
+    ]{LCFS-PR}{115} \\
+    \gantttitlelist{125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,205,210,215,220,225,230,235,
+    240}{5} \\
+    \ganttbar{$P_1$}{1}{20} \\
+    \ganttbar{$P_2$}{21}{65} \\
+    \ganttbar{$P_3$}{66}{85} \\
+    \ganttbar{$P_4$}{86}{110}
+\end{ganttchart}
+\begin{ganttchart}[vgrid,
+    x unit=0.14cm]{1}{120}
+    \gantttitle[title/.style={draw=none, fill=none},
+    include title in canvas=false
+    ]{RR (Zeitquantum 20)}{120} \\
+    \gantttitlelist{5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120}{5}\\
+    \ganttbar{$P_1$}{1}{40} %% P2, P3, P1 
+    \ganttbar{}{81}{100} %% P4, P5, P2, P3
+    \\
+    \ganttbar{$P_2$}{41}{60} %% P3, P1, P4, P5, P2 
+    \\
+    \ganttbar{$P_3$}{61}{80} %% P1, P4, P5, P2, P3
+    \\
+    \ganttbar{$P_4$}{101}{120} %% P5, P2, P3, P4
+\end{ganttchart}
+\begin{ganttchart}[vgrid,
+    x unit=0.14cm]{1}{120}
+    \gantttitle[title/.style={draw=none, fill=none},
+    include title in canvas=false
+    ]{RR (Zeitquantum 20)}{120} \\
+    \gantttitlelist{125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,205,210,215,220,225,230,235,240}{5} \\
+    \ganttbar{$P_2$}{21}{40} %% P3, P4, P5, P2
+    \ganttbar{}{91}{100} %% P5
+    \\
+    \ganttbar{$P_3$}{41}{60} %% P4, P5, P2
+    \\
+    \ganttbar{$P_4$}{61}{70} %% P5, P2
+    \\ 
+    \ganttbar{$P_5$}{1}{20} %% P2, P3, P4, P5
+    \ganttbar{}{71}{90} %% P2, P5
+    \ganttbar{}{101}{110}
+\end{ganttchart}
+\begin{ganttchart}[vgrid,
+    x unit=0.14cm]{1}{120}
+    \gantttitle[title/.style={draw=none, fill=none},
+    include title in canvas=false
+    ]{Multilevel Feedback}{120} \\
+    \gantttitlelist{5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120}{5}\\
+    \ganttbar{$P_1$}{1}{30} 
+    \\
+    \ganttbar{$P_2$}{31}{40}
+    \ganttbar{}{71}{90}
+    \\
+    \ganttbar{$P_3$}{41}{50}
+    \ganttbar{}{91}{110}
+    \\
+    \ganttbar{$P_4$}{51}{60}
+    \ganttbar{$P_4$}{111}{120}
+    \\
+    \ganttbar{$P_5$}{61}{70}
+\end{ganttchart}
+\begin{ganttchart}[vgrid,
+    x unit=0.14cm]{1}{120}
+    \gantttitle[title/.style={draw=none, fill=none},
+    include title in canvas=false
+    ]{Multilevel Feedback}{120} \\
+    \gantttitlelist{125,130,135,140,145,150,155,160,165,170,175,180,185,190,195,200,205,210,215,220,225,230,235,240}{5} \\
+    \ganttbar{$P_1$}{31}{60}
+    \\
+    \ganttbar{$P_2$}{61}{80}
+    \\
+    \ganttbar{$P_3$}{81}{90}
+    \\
+    \ganttbar{$P_4$}{1}{10}
+    \\
+    \ganttbar{$P_5$}{11}{30}
+    \ganttbar{}{91}{110}
+\end{ganttchart}
+
+\textbf{LCFS-PR}
+
+\textbf{$P_1$} \\
+Bedienzeit: 60 \\
+Antwortzeit: 140 \\
+Wartezeit: 80 \\
+normalisierte Antwortzeit: $2,3$ \\
+
+\textbf{$P_4$} \\
+Bedienzeit: 30 \\
+Antwortzeit: 180 \\
+Wartezeit: 150 \\
+normalisierte Antwortzeit:  $6$\\
+
+\textbf{RR}
+
+\textbf{$P_1$} \\
+Bedienzeit: 60 \\
+Antwortzeit: 100 \\
+Wartezeit: 40 \\
+normalisierte Antwortzeit: $1,6$ \\
+
+\textbf{$P_4$} \\
+Bedienzeit: 30 \\
+Antwortzeit: 190 \\
+Wartezeit: 160 \\
+normalisierte Antwortzeit: $6,3$ \\
+
+\textbf{Multilevel Feedbackstrategie}
+
+\textbf{$P_1$} \\
+Bedienzeit: 60 \\
+Antwortzeit: 180 \\
+Wartezeit: 120 \\
+normalisierte Antwortzeit: $3$ \\
+
+\textbf{$P_4$} \\
+Bedienzeit: 30 \\
+Antwortzeit: 80 \\
+Wartezeit: 50 \\
+normalisierte Antwortzeit: $2,6$ \\
+
+
+\end{document}
